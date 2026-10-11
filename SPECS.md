@@ -44,7 +44,7 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 ├── README.md                        # Relatório final da jornada com IA (substituirá o original)
 │
 ├── docs/
-│   ├── prompts/                     # Prompts especializados para geração de cada artefato
+│   ├── specialized_prompts/         # Prompts especializados para geração de cada artefato
 │   │   ├── prompt_prd.md            # Prompt para geração do PRD
 │   │   ├── prompt_adrs.md           # Prompt para geração das ADRs
 │   │   ├── prompt_rfc.md            # Prompt para geração da RFC
@@ -52,6 +52,7 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 │   │   └── prompt_tracker.md        # Prompt para geração do Tracker
 │   │
 │   └── F001/                        # Artefatos gerados da Feature de Webhooks
+│       ├── transcription.md         # Cópia local da transcrição da reunião
 │       ├── PRD.md                   # Product Requirements Document
 │       ├── adrs/                    # Architecture Decision Records (geradas antes da RFC)
 │       │   ├── ADR-001-outbox-no-mysql.md
@@ -211,10 +212,10 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
   - Validar estrutura MADR e cobrir as decisões de outbox, retry/DLQ, HMAC, idempotência, worker isolado e arquitetura modular existente.
   - Status: *Concluído* ✅
 
-- [ ] **2.3 Execução do Prompt RFC -> `docs/F001/RFC.md`**
-  - Executar prompt combinando `PRD.md`, as ADRs recém-geradas e `TRANSCRICAO.md`.
+- [x] **2.3 Execução do Prompt RFC -> `docs/F001/RFC.md`**
+  - Executar prompt combinando `PRD.md`, as ADRs recém-geradas e `docs/F001/transcription.md`.
   - Garantir extensão entre 2 e 4 páginas, tom de proposta técnica aberta, alternativas descartadas, questões em aberto e links diretos para os arquivos de ADRs existentes.
-  - Status: *Pendente*
+  - Status: *Concluído* ✅
 
 - [ ] **2.4 Execução do Prompt FDD -> `docs/F001/FDD.md`**
   - Executar prompt combinando `PRD.md`, `RFC.md`, as ADRs, `TRANSCRICAO.md` e código existente (`src/`, `prisma/schema.prisma`).
@@ -252,15 +253,15 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 
 ## 5. Matriz de Acompanhamento e Critérios de Aceite
 
-### 5.1 Prompts Especializados (`docs/prompts/`)
+### 5.1 Prompts Especializados (`docs/specialized_prompts/`)
 
 | Prompt | Caminho | Características e Regras Embutidas | Status |
 | :--- | :--- | :--- | :--- |
-| **Prompt PRD** | `docs/prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
-| **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
-| **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
-| **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
-| **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico e reutilizável; tabela 6 colunas; IDs padronizados; painel estatístico; cobertura ≥ 80% total, ≥ 70% transcrição, ≥ 5 linhas código. | ✅ Concluído |
+| **Prompt PRD** | `docs/specialized_prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
+| **Prompt ADRs** | `docs/specialized_prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
+| **Prompt RFC** | `docs/specialized_prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
+| **Prompt FDD** | `docs/specialized_prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
+| **Prompt TRACKER** | `docs/specialized_prompts/prompt_tracker.md` | Agnóstico e reutilizável; tabela 6 colunas; IDs padronizados; painel estatístico; cobertura ≥ 80% total, ≥ 70% transcrição, ≥ 5 linhas código. | ✅ Concluído |
 
 ### 5.2 Artefatos Gerados da Feature (`docs/F001/`)
 
@@ -268,7 +269,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | :--- | :--- | :--- | :--- |
 | **PRD** | `docs/F001/PRD.md` | 12 seções; ≥ 8 Requisitos Funcionais; ≥ 1 meta quantitativa; ≥ 2 fora de escopo; ≥ 2 riscos com probabilidade/impacto. | ✅ Concluído |
 | **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ✅ Concluído |
-| **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ⏳ Pendente |
+| **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ✅ Concluído |
 | **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ⏳ Pendente |
 | **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ⏳ Pendente |
 | **README** | `README.md` | Jornada do processo; ferramentas de IA; workflow; ≥ 2 prompts em blocos de código; ≥ 2 iterações/correções documentadas; guia de navegação. | ⏳ Pendente |
