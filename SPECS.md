@@ -52,7 +52,7 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 │   │   └── prompt_tracker.md        # Prompt para geração do Tracker
 │   │
 │   └── F001/                        # Artefatos gerados da Feature de Webhooks
-│       ├── transcription.md         # Cópia local da transcrição da reunião
+│       ├── TRANSCRICAO.md           # Cópia local da transcrição da reunião
 │       ├── PRD.md                   # Product Requirements Document
 │       ├── adrs/                    # Architecture Decision Records (geradas antes da RFC)
 │       │   ├── ADR-001-outbox-no-mysql.md
@@ -213,14 +213,14 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
   - Status: *Concluído* ✅
 
 - [x] **2.3 Execução do Prompt RFC -> `docs/F001/RFC.md`**
-  - Executar prompt combinando `PRD.md`, as ADRs recém-geradas e `docs/F001/transcription.md`.
+  - Executar prompt combinando `PRD.md`, as ADRs recém-geradas e `docs/F001/TRANSCRICAO.md`.
   - Garantir extensão entre 2 e 4 páginas, tom de proposta técnica aberta, alternativas descartadas, questões em aberto e links diretos para os arquivos de ADRs existentes.
   - Status: *Concluído* ✅
 
-- [ ] **2.4 Execução do Prompt FDD -> `docs/F001/FDD.md`**
-  - Executar prompt combinando `PRD.md`, `RFC.md`, as ADRs, `TRANSCRICAO.md` e código existente (`src/`, `prisma/schema.prisma`).
+- [x] **2.4 Execução do Prompt FDD -> `docs/F001/FDD.md`**
+  - Executar prompt combinando `PRD.md`, `RFC.md`, as ADRs, `docs/F001/TRANSCRICAO.md` e código existente (`src/`, `prisma/schema.prisma`).
   - Validar detalhamento dos 4+ contratos HTTP, matriz com códigos `WEBHOOK_*`, estratégias de backoff e os 4+ arquivos reais de integração.
-  - Status: *Pendente*
+  - Status: *Concluído* ✅
 
 - [ ] **2.5 Execução do Prompt TRACKER -> `docs/F001/TRACKER.md`**
   - Compilar todos os IDs de requisitos funcionais, decisões das ADRs, alternativas da RFC e contratos do FDD.
@@ -270,7 +270,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | **PRD** | `docs/F001/PRD.md` | 12 seções; ≥ 8 Requisitos Funcionais; ≥ 1 meta quantitativa; ≥ 2 fora de escopo; ≥ 2 riscos com probabilidade/impacto. | ✅ Concluído |
 | **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ✅ Concluído |
 | **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ✅ Concluído |
-| **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ⏳ Pendente |
+| **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ✅ Concluído |
 | **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ⏳ Pendente |
 | **README** | `README.md` | Jornada do processo; ferramentas de IA; workflow; ≥ 2 prompts em blocos de código; ≥ 2 iterações/correções documentadas; guia de navegação. | ⏳ Pendente |
 
