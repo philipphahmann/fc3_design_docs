@@ -158,16 +158,18 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Pelo menos 1 ADR referenciando diretamente arquivos/classes do código base.
   - Status: *Concluído* ✅
 
-- [ ] **1.3 Prompt de RFC (`docs/prompts/prompt_rfc.md`)**
+- [x] **1.3 Prompt de RFC (`docs/prompts/prompt_rfc.md`)**
   - Papel: Proposta arquitetural concisa (2 a 4 páginas) para discussão e revisão da equipe, integrando as decisões já registradas nas ADRs.
   - Critérios embutidos no prompt:
-    - Metadados com revisores reais da call (Larissa, Marcos, Bruno, Diego, Sofia).
-    - Resumo executivo (TL;DR).
-    - Proposta técnica de alto nível (Outbox + Worker polling + HMAC-SHA256 + At-least-once).
-    - No mínimo 2 alternativas reais descartadas com análise de trade-offs (ex: disparo síncrono no `OrderService`, mensageria externa Redis Streams/Kafka, triggers de banco de dados).
-    - No mínimo 2 questões em aberto ou pontos futuros (ex: rate limiting de disparo para clientes com muitas mudanças, particionamento/escala multi-worker).
+    - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{CAMINHO_DESTINO}}`, `{{DIRETORIO_ADRS}}`, `{{CONTEXTO_SISTEMA}}`).
+    - Tabela de observações críticas sobre o conteúdo esperado na transcrição.
+    - Metadados com revisores extraídos da transcrição.
+    - Resumo executivo (TL;DR) e proposta técnica conceitual com diagrama Mermaid.
+    - No mínimo 2 alternativas reais descartadas com análise de trade-offs.
+    - No mínimo 2 questões técnicas em aberto ou pontos futuros.
     - Links diretos para no mínimo 2 ADRs já consolidadas no pacote.
-  - Status: *Pendente*
+    - Regra estrita de não-ocultação de seções.
+  - Status: *Concluído* ✅
 
 - [ ] **1.4 Prompt de FDD (`docs/prompts/prompt_fdd.md`)**
   - Papel: Especificação técnica profunda e acionável para o desenvolvedor codificar.
@@ -252,7 +254,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | :--- | :--- | :--- | :--- |
 | **Prompt PRD** | `docs/prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
 | **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
-| **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico; 2 a 4 páginas; TL;DR; alternativas descartadas; questões em aberto; links diretos para ADRs existentes. | ⏳ Pendente |
+| **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
 | **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico; 4+ contratos HTTP; matriz prefixada `WEBHOOK_*`; fluxos outbox/worker/retry/DLQ; 4+ caminhos de código base. | ⏳ Pendente |
 | **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico; tabela 6 colunas; ≥ 80% cobertura; ≥ 70% `[hh:mm] Nome`; ≥ 5 linhas `CODIGO`. | ⏳ Pendente |
 
