@@ -46,24 +46,24 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 ├── docs/
 │   ├── prompts/                     # Prompts especializados para geração de cada artefato
 │   │   ├── prompt_prd.md            # Prompt para geração do PRD
+│   │   ├── prompt_adrs.md           # Prompt para geração das ADRs
 │   │   ├── prompt_rfc.md            # Prompt para geração da RFC
 │   │   ├── prompt_fdd.md            # Prompt para geração do FDD
-│   │   ├── prompt_adrs.md           # Prompt para geração das ADRs
 │   │   └── prompt_tracker.md        # Prompt para geração do Tracker
 │   │
 │   └── F001/                        # Artefatos gerados da Feature de Webhooks
 │       ├── PRD.md                   # Product Requirements Document
-│       ├── RFC.md                   # Request for Comments
+│       ├── adrs/                    # Architecture Decision Records (geradas antes da RFC)
+│       │   ├── ADR-001-outbox-no-mysql.md
+│       │   ├── ADR-002-politica-retry-backoff-dlq.md
+│       │   ├── ADR-003-autenticacao-hmac-sha256.md
+│       │   ├── ADR-004-entrega-at-least-once-idempotencia.md
+│       │   ├── ADR-005-worker-processo-separado-polling.md
+│       │   ├── ADR-006-reuso-padroes-codigo-existente.md
+│       │   └── ADR-007-snapshot-payload-insercao-outbox.md (opcional/adicional)
+│       ├── RFC.md                   # Request for Comments (com links para as ADRs)
 │       ├── FDD.md                   # Feature Design Document
-│       ├── TRACKER.md               # Matriz de Rastreabilidade
-│       └── adrs/                    # Architecture Decision Records
-│           ├── ADR-001-outbox-no-mysql.md
-│           ├── ADR-002-politica-retry-backoff-dlq.md
-│           ├── ADR-003-autenticacao-hmac-sha256.md
-│           ├── ADR-004-entrega-at-least-once-idempotencia.md
-│           ├── ADR-005-worker-processo-separado-polling.md
-│           ├── ADR-006-reuso-padroes-codigo-existente.md
-│           └── ADR-007-snapshot-payload-insercao-outbox.md (opcional/adicional)
+│       └── TRACKER.md               # Matriz de Rastreabilidade
 │
 ├── src/                             # Código base existente (apenas leitura / contexto)
 ├── prisma/                          # Modelagem de dados atual (apenas leitura / contexto)
@@ -135,7 +135,7 @@ flowchart TD
 
 Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a geração dos documentos, em ordem natural e fluida:
 
-- [ ] **1.1 Prompt de PRD (`docs/prompts/prompt_prd.md`)**
+- [x] **1.1 Prompt de PRD (`docs/prompts/prompt_prd.md`)**
   - Papel: Definir requisitos de produto, problema, objetivos, métricas quantitativas, público e escopo.
   - Critérios embutidos no prompt:
     - Seguir padrão dos templates em `examples/PRD/`.
@@ -144,8 +144,8 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Pelo menos 1 métrica quantitativa clara (ex: latência p95 de entrega < 10s, disponibilidade, etc.).
     - Seção "Fora de Escopo" com no mínimo 2 itens descartados/adiados (e-mails, dashboard visual, rate limiting de saída).
     - Mínimo de 2 riscos com probabilidade, impacto e mitigação.
-    - Regras estritas de anti-alucinação.
-  - Status: *Pendente*
+    - Regras estritas de anti-alucinação e não-ocultação de seções.
+  - Status: *Concluído* ✅
 
 - [ ] **1.2 Prompt de ADRs (`docs/prompts/prompt_adrs.md`)**
   - Papel: Registrar decisões arquiteturais individuais e isoladas no formato MADR antes da proposta geral da RFC.
@@ -248,7 +248,19 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 
 ---
 
-## 5. Matriz de Critérios de Aceite por Documento
+## 5. Matriz de Acompanhamento e Critérios de Aceite
+
+### 5.1 Prompts Especializados (`docs/prompts/`)
+
+| Prompt | Caminho | Características e Regras Embutidas | Status |
+| :--- | :--- | :--- | :--- |
+| **Prompt PRD** | `docs/prompts/prompt_prd.md` | 100% agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
+| **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico; formato MADR; entre 5 e 8 decisões; cobertura de decisões-chave; referências ao código base. | ⏳ Pendente |
+| **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico; 2 a 4 páginas; TL;DR; alternativas descartadas; questões em aberto; links diretos para ADRs existentes. | ⏳ Pendente |
+| **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico; 4+ contratos HTTP; matriz prefixada `WEBHOOK_*`; fluxos outbox/worker/retry/DLQ; 4+ caminhos de código base. | ⏳ Pendente |
+| **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico; tabela 6 colunas; ≥ 80% cobertura; ≥ 70% `[hh:mm] Nome`; ≥ 5 linhas `CODIGO`. | ⏳ Pendente |
+
+### 5.2 Artefatos Gerados da Feature (`docs/F001/`)
 
 | Documento | Caminho | Regras Críticas Obrigatórias | Status |
 | :--- | :--- | :--- | :--- |
