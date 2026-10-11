@@ -206,10 +206,10 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
   - Revisar seções: problema, personas, métricas quantitativas, escopo (incluso/excluso), 8+ requisitos funcionais, riscos e estratégias de teste.
   - Status: *Concluído* ✅
 
-- [ ] **2.2 Execução do Prompt ADRs -> `docs/F001/adrs/ADR-001` a `ADR-00N.md`**
-  - Executar prompt gerando entre 5 e 8 arquivos `.md` individuais.
+- [x] **2.2 Execução do Prompt ADRs -> `docs/F001/adrs/ADR-001` a `ADR-007.md`**
+  - Executar prompt gerando entre 5 e 8 arquivos `.md` individuais (7 ADRs geradas).
   - Validar estrutura MADR e cobrir as decisões de outbox, retry/DLQ, HMAC, idempotência, worker isolado e arquitetura modular existente.
-  - Status: *Pendente*
+  - Status: *Concluído* ✅
 
 - [ ] **2.3 Execução do Prompt RFC -> `docs/F001/RFC.md`**
   - Executar prompt combinando `PRD.md`, as ADRs recém-geradas e `TRANSCRICAO.md`.
@@ -267,7 +267,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | Documento | Caminho | Regras Críticas Obrigatórias | Status |
 | :--- | :--- | :--- | :--- |
 | **PRD** | `docs/F001/PRD.md` | 12 seções; ≥ 8 Requisitos Funcionais; ≥ 1 meta quantitativa; ≥ 2 fora de escopo; ≥ 2 riscos com probabilidade/impacto. | ✅ Concluído |
-| **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ⏳ Pendente |
+| **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ✅ Concluído |
 | **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ⏳ Pendente |
 | **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ⏳ Pendente |
 | **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ⏳ Pendente |
