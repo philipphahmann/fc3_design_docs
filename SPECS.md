@@ -147,20 +147,16 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regras estritas de anti-alucinação e não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [ ] **1.2 Prompt de ADRs (`docs/prompts/prompt_adrs.md`)**
+- [x] **1.2 Prompt de ADRs (`docs/prompts/prompt_adrs.md`)**
   - Papel: Registrar decisões arquiteturais individuais e isoladas no formato MADR antes da proposta geral da RFC.
   - Critérios embutidos no prompt:
-    - Formato padrão MADR (Status, Contexto, Decisão, Alternativas Consideradas, Consequências).
-    - Quantidade: entre 5 e 8 ADRs independentes (`ADR-001` a `ADR-00N`).
-    - Cobertura obrigatória de pelo menos 5 das 6 decisões-chave:
-      1. Outbox Pattern no MySQL existente;
-      2. Política de Retry exponencial (1m/5m/30m/2h/12h) e Dead Letter Queue (DLQ);
-      3. Autenticação HMAC-SHA256 com secret rotacionável por endpoint;
-      4. Garantia at-least-once com cabeçalho `X-Event-Id` para desduplicação;
-      5. Worker desacoplado em processo separado com polling de 2 segundos;
-      6. Reuso integral dos padrões da codebase (`AppError`, Pino, `requireRole`, Zod).
+    - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{DIRETORIO_DESTINO}}`, `{{CONTEXTO_SISTEMA}}`).
+    - Tabela de observações críticas sobre o conteúdo esperado na transcrição.
+    - Formato padrão MADR (Status, Contexto, Decisão, Alternativas Consideradas, Consequências, Integração/Rastreabilidade).
+    - Pelo menos 1 alternativa real descartada com motivo técnico do descarte.
+    - Trade-offs e consequências explícitas (positivas e negativas).
     - Pelo menos 1 ADR referenciando diretamente arquivos/classes do código base.
-  - Status: *Pendente*
+  - Status: *Concluído* ✅
 
 - [ ] **1.3 Prompt de RFC (`docs/prompts/prompt_rfc.md`)**
   - Papel: Proposta arquitetural concisa (2 a 4 páginas) para discussão e revisão da equipe, integrando as decisões já registradas nas ADRs.
@@ -254,8 +250,8 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 
 | Prompt | Caminho | Características e Regras Embutidas | Status |
 | :--- | :--- | :--- | :--- |
-| **Prompt PRD** | `docs/prompts/prompt_prd.md` | 100% agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
-| **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico; formato MADR; entre 5 e 8 decisões; cobertura de decisões-chave; referências ao código base. | ⏳ Pendente |
+| **Prompt PRD** | `docs/prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
+| **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
 | **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico; 2 a 4 páginas; TL;DR; alternativas descartadas; questões em aberto; links diretos para ADRs existentes. | ⏳ Pendente |
 | **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico; 4+ contratos HTTP; matriz prefixada `WEBHOOK_*`; fluxos outbox/worker/retry/DLQ; 4+ caminhos de código base. | ⏳ Pendente |
 | **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico; tabela 6 colunas; ≥ 80% cobertura; ≥ 70% `[hh:mm] Nome`; ≥ 5 linhas `CODIGO`. | ⏳ Pendente |
