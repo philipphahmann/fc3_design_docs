@@ -222,11 +222,11 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
   - Validar detalhamento dos 4+ contratos HTTP, matriz com códigos `WEBHOOK_*`, estratégias de backoff e os 4+ arquivos reais de integração.
   - Status: *Concluído* ✅
 
-- [ ] **2.5 Execução do Prompt TRACKER -> `docs/F001/TRACKER.md`**
-  - Compilar todos os IDs de requisitos funcionais, decisões das ADRs, alternativas da RFC e contratos do FDD.
+- [x] **2.5 Execução do Prompt TRACKER -> `docs/F001/TRACKER.md`**
+  - Compilar todos os IDs de requisitos funcionais, decisões das ADRs, alternativas da RFC e contratos do FDD (57 itens rastreados).
   - Mapear cada linha com timestamp `[hh:mm] Nome` ou caminho de arquivo real do repositório.
-  - Validar índices de cobertura (>= 80% total, >= 70% transcrição, >= 5 código).
-  - Status: *Pendente*
+  - Validar índices de cobertura (87,7% transcrição, 7 linhas código, 100% elementos dos docs).
+  - Status: *Concluído* ✅
 
 ---
 
@@ -271,7 +271,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ✅ Concluído |
 | **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ✅ Concluído |
 | **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ✅ Concluído |
-| **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ⏳ Pendente |
+| **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ✅ Concluído |
 | **README** | `README.md` | Jornada do processo; ferramentas de IA; workflow; ≥ 2 prompts em blocos de código; ≥ 2 iterações/correções documentadas; guia de navegação. | ⏳ Pendente |
 
 ---
