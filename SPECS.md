@@ -171,15 +171,18 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regra estrita de não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [ ] **1.4 Prompt de FDD (`docs/prompts/prompt_fdd.md`)**
+- [x] **1.4 Prompt de FDD (`docs/prompts/prompt_fdd.md`)**
   - Papel: Especificação técnica profunda e acionável para o desenvolvedor codificar.
   - Critérios embutidos no prompt:
-    - Fluxos detalhados: criação do evento na outbox, ciclo do worker de polling, política de retry e migração para DLQ.
-    - Contratos de API: no mínimo 4 endpoints HTTP completos (ex: POST `/webhooks`, GET `/webhooks`, GET `/webhooks/:id/deliveries`, POST `/admin/webhooks/dead-letter/:id/replay`, rotação de secret).
-    - Matriz de erros obrigatória com códigos padronizados no prefixo `WEBHOOK_*`.
-    - Resiliência e observabilidade (métricas, logs estruturados com Pino, tracing).
-    - Seção mandatória de integração nomeando e integrando no mínimo 4 arquivos reais do código base (`src/modules/orders/order.service.ts`, etc.).
-  - Status: *Pendente*
+    - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{CAMINHO_DESTINO}}`, `{{ARQUIVO_PRD}}`, `{{DIRETORIO_ADRS}}`, `{{CONTEXTO_SISTEMA}}`).
+    - Tabela de observações críticas sobre o conteúdo esperado na transcrição e no código.
+    - Fluxos detalhados: criação do evento na outbox, ciclo do worker de polling, política de retry e migração para DLQ (diagramas Mermaid).
+    - Contratos de API: no mínimo 4 endpoints HTTP completos com request/response JSON e status codes.
+    - Matriz de erros padronizada com prefixo de domínio específico (`[DOMINIO]_*`).
+    - Resiliência e observabilidade (timeouts, backoff, métricas, logs estruturados em JSON, tracing).
+    - Seção mandatória de integração nomeando e integrando no mínimo 4 arquivos reais do código base.
+    - Regra estrita de não-ocultação de seções.
+  - Status: *Concluído* ✅
 
 - [ ] **1.5 Prompt do TRACKER (`docs/prompts/prompt_tracker.md`)**
   - Papel: Matriz bidirecional de rastreabilidade para auditoria e controle de alucinações.
@@ -255,7 +258,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | **Prompt PRD** | `docs/prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
 | **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
 | **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
-| **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico; 4+ contratos HTTP; matriz prefixada `WEBHOOK_*`; fluxos outbox/worker/retry/DLQ; 4+ caminhos de código base. | ⏳ Pendente |
+| **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
 | **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico; tabela 6 colunas; ≥ 80% cobertura; ≥ 70% `[hh:mm] Nome`; ≥ 5 linhas `CODIGO`. | ⏳ Pendente |
 
 ### 5.2 Artefatos Gerados da Feature (`docs/F001/`)
