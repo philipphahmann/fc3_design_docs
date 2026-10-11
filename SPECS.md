@@ -184,15 +184,16 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regra estrita de não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [ ] **1.5 Prompt do TRACKER (`docs/prompts/prompt_tracker.md`)**
+- [x] **1.5 Prompt do TRACKER (`docs/prompts/prompt_tracker.md`)**
   - Papel: Matriz bidirecional de rastreabilidade para auditoria e controle de alucinações.
   - Critérios embutidos no prompt:
+    - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{DIRETORIO_DOCUMENTOS}}`, `{{CAMINHO_DESTINO}}`, `{{CONTEXTO_SISTEMA}}`).
+    - Tabela de observações críticas sobre o conteúdo esperado na transcrição e no código.
     - Estrutura de tabela com 6 colunas estritas: `| ID | Documento | Tipo | Conteúdo (resumo) | Fonte | Localização |`.
-    - IDs padronizados (`PRD-FR-*`, `ADR-00*`, `RFC-ALT-*`, `FDD-CONTRATO-*`, etc.).
-    - Cobertura mínima de 80% dos elementos dos documentos gerados.
-    - Mínimo de 70% das linhas apontando para `Fonte = TRANSCRICAO` com `[hh:mm] Nome`.
-    - Mínimo de 5 linhas apontando para `Fonte = CODIGO` com caminhos reais de arquivos existentes.
-  - Status: *Pendente*
+    - IDs padronizados (`PRD-FR-*`, `ADR-00*`, `RFC-PROP-*`, `RFC-ALT-*`, `FDD-CTR-*`, etc.).
+    - Auditoria matemática de cobertura: ≥ 80% do total de itens dos docs, ≥ 70% com `[hh:mm] Nome` (`TRANSCRICAO`) e ≥ 5 linhas apontando para caminhos reais de código base (`CODIGO`).
+    - Resumo estatístico de conformidade da auditoria ao final.
+  - Status: *Concluído* ✅
 
 ---
 
@@ -259,7 +260,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | **Prompt ADRs** | `docs/prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
 | **Prompt RFC** | `docs/prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
 | **Prompt FDD** | `docs/prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
-| **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico; tabela 6 colunas; ≥ 80% cobertura; ≥ 70% `[hh:mm] Nome`; ≥ 5 linhas `CODIGO`. | ⏳ Pendente |
+| **Prompt TRACKER** | `docs/prompts/prompt_tracker.md` | Agnóstico e reutilizável; tabela 6 colunas; IDs padronizados; painel estatístico; cobertura ≥ 80% total, ≥ 70% transcrição, ≥ 5 linhas código. | ✅ Concluído |
 
 ### 5.2 Artefatos Gerados da Feature (`docs/F001/`)
 
