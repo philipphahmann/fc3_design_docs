@@ -1,6 +1,6 @@
 # Prompt Especializado: Geração Universal de PRD a partir de Transcrição Técnica
 
-> **Arquivo:** `docs/prompts/prompt_prd.md`  
+> **Arquivo:** `docs/design_docs_prompts/prompt_prd.md`  
 > **Finalidade:** Prompt agnóstico e reutilizável para converter qualquer transcrição de reunião técnica em um Product Requirement Document (PRD) de alto nível.  
 > **Referência Metodológica:** Modelos canônicos de PRD em `examples/PRD/`  
 

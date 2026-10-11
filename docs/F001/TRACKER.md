@@ -12,7 +12,7 @@
 Este documento estabelece o mapeamento bidirecional e a matriz de auditoria de todo o pacote de **Design Docs** da Feature F001 (*Sistema de Webhooks de Notificação de Pedidos*). 
 
 A finalidade primordial desta auditoria é assegurar que **100% das especificações técnicas registradas nos documentos** (PRD, ADRs, RFC e FDD) possuam evidência primária comprovável em uma das duas fontes soberanas:
-1. **`TRANSCRICAO`:** A gravação da reunião de alinhamento técnico transcrita em [`docs/F001/TRANSCRICAO.md`](file:///c:/Users/hahma/Documents/Projetos/FullCycle/FC3%20-%20Da%20Reunião%20ao%20Documento%20Design%20Docs%20Gerados%20por%20IA/fc3_design_docs/docs/F001/TRANSCRICAO.md), identificada estritamente pelo padrão temporal e falante `[hh:mm] Nome`.
+1. **`TRANSCRICAO`:** A gravação da reunião de alinhamento técnico transcrita em [`docs/F001/TRANSCRICAO.md`](docs/F001/TRANSCRICAO.md), identificada estritamente pelo padrão temporal e falante `[hh:mm] Nome`.
 2. **`CODIGO`:** Os arquivos reais existentes no repositório do Order Management System (Node.js/TypeScript/Prisma).
 
 ---

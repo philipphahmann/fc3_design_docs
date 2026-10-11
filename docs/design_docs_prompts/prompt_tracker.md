@@ -1,6 +1,6 @@
 # Prompt Especializado: Geração Universal do Tracker de Rastreabilidade
 
-> **Arquivo:** `docs/prompts/prompt_tracker.md`  
+> **Arquivo:** `docs/design_docs_prompts/prompt_tracker.md`  
 > **Finalidade:** Prompt agnóstico e reutilizável para compilar a matriz bidirecional de rastreabilidade (Tracker) a partir dos design docs gerados, da transcrição e do código base.  
 > **Artefato Alvo:** `docs/F001/TRACKER.md` (ou caminho parametrizado em `{{CAMINHO_DESTINO}}`)  
 

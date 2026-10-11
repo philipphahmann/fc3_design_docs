@@ -1,6 +1,6 @@
 # Prompt Especializado: Geração Universal de FDD a partir de Transcrição Técnica e Código Base
 
-> **Arquivo:** `docs/prompts/prompt_fdd.md`  
+> **Arquivo:** `docs/design_docs_prompts/prompt_fdd.md`  
 > **Finalidade:** Prompt agnóstico e reutilizável para gerar uma especificação técnica de implementação acionável e profunda (Feature Design Document - FDD).  
 > **Artefato Alvo:** `docs/F001/FDD.md` (ou caminho parametrizado em `{{CAMINHO_DESTINO}}`)  
 

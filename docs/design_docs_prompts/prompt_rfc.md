@@ -1,6 +1,6 @@
 # Prompt Especializado: Geração Universal de RFC a partir de Transcrição Técnica
 
-> **Arquivo:** `docs/prompts/prompt_rfc.md`  
+> **Arquivo:** `docs/design_docs_prompts/prompt_rfc.md`  
 > **Finalidade:** Prompt agnóstico e reutilizável para converter deliberações de uma reunião técnica em um Request for Comments (RFC) conciso de arquitetura (2 a 4 páginas).  
 > **Artefato Alvo:** `docs/F001/RFC.md` (ou caminho parametrizado em `{{CAMINHO_DESTINO}}`)  
 

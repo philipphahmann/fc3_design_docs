@@ -1,6 +1,6 @@
 # Prompt Especializado: Geração Universal de ADRs a partir de Transcrição Técnica
 
-> **Arquivo:** `docs/prompts/prompt_adrs.md`  
+> **Arquivo:** `docs/design_docs_prompts/prompt_adrs.md`  
 > **Finalidade:** Prompt agnóstico e reutilizável para extrair decisões arquiteturais de uma reunião técnica e gerar Architecture Decision Records (ADRs) independentes no padrão MADR.  
 > **Artefatos Alvo:** Arquivos individuais no formato `ADR-NNN-titulo-em-kebab-case.md` em `{{DIRETORIO_DESTINO}}`  
 

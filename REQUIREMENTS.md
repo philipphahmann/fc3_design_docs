@@ -10,7 +10,7 @@
 
 ### 1.1 Cenário
 Uma empresa que opera um **Order Management System (OMS)** em produção vai construir uma nova feature: o **Sistema de Webhooks de Notificação de Pedidos**.  
-A decisão técnica já foi tomada em uma reunião entre Tech Lead, PM, Engenheiros e Especialista de Segurança, gravada e transcrita no arquivo [`TRANSCRICAO.md`](file:///c:/Users/hahma/Documents/Projetos/FullCycle/FC3%20-%20Da%20Reunião%20ao%20Documento%20Design%20Docs%20Gerados%20por%20IA/fc3_design_docs/TRANSCRICAO.md). Nenhuma outra documentação formal foi registrada além da transcrição da call.
+A decisão técnica já foi tomada em uma reunião entre Tech Lead, PM, Engenheiros e Especialista de Segurança, gravada e transcrita no arquivo [`TRANSCRICAO.md`](docs/F001/TRANSCRICAO.md). Nenhuma outra documentação formal foi registrada além da transcrição da call.
 
 ### 1.2 Objetivo
 Produzir, a partir da transcrição e do código-fonte existente da aplicação, um pacote completo de documentação técnica (*Design Docs*) em nível **acionável**, suficiente para que o time de engenharia possa iniciar a implementação da feature sem ambiguidades.

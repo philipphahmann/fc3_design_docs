@@ -2,19 +2,19 @@
 
 > **Projeto:** Full Cycle 3 — Da Reunião ao Documento: Design Docs Gerados por IA  
 > **Feature F001:** Sistema de Webhooks de Notificação de Pedidos (OMS)  
-> **Status Geral:** Em Execução — Fase 2 (Geração de Artefatos)  
+> **Status Geral:** Concluído & 100% Auditado (Fases 1, 2, 3 e 4) ✅  
 > **Última Atualização:** 2026-10-11  
 
 ---
 
 ## 1. Visão Geral e Objetivo
 
-O objetivo deste projeto é transformar a gravação de alinhamento técnico transcrita em [`TRANSCRICAO.md`](file:///c:/Users/hahma/Documents/Projetos/FullCycle/FC3%20-%20Da%20Reunião%20ao%20Documento%20Design%20Docs%20Gerados%20por%20IA/fc3_design_docs/TRANSCRICAO.md) e o código base existente em um pacote profissional e acionável de **Design Docs** de engenharia de software para o **Sistema de Webhooks de Notificação de Pedidos**.
+O objetivo deste projeto é transformar a gravação de alinhamento técnico transcrita em [`TRANSCRICAO.md`](docs/F001/TRANSCRICAO.md) e o código base existente em um pacote profissional e acionável de **Design Docs** de engenharia de software para o **Sistema de Webhooks de Notificação de Pedidos**.
 
 A estratégia é orientada a **Engenharia de Prompts Especializados**:
 1. Desenvolver prompts estruturados e reutilizáveis (um para cada tipo de documento), contendo o papel do documento, modelo canônico, regras estritas de não-alucinação e seções mandatórias.
 2. Executar os prompts sequencialmente fornecendo a transcrição e o contexto do repositório como entrada.
-3. Revisar, refinar e validar cada documento contra os critérios de aceite e rastreabilidade definidos em [`REQUIREMENTS.md`](file:///c:/Users/hahma/Documents/Projetos/FullCycle/FC3%20-%20Da%20Reunião%20ao%20Documento%20Design%20Docs%20Gerados%20por%20IA/fc3_design_docs/REQUIREMENTS.md).
+3. Revisar, refinar e validar cada documento contra os critérios de aceite e rastreabilidade definidos em [`REQUIREMENTS.md`](REQUIREMENTS.md).
 
 ---
 
@@ -26,7 +26,7 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 
 > [!IMPORTANT]
 > **Rastreabilidade Bidirecional e Anti-Alucinação:**  
-> Qualquer requisito, decisão arquitetural, restrição, endpoint ou payload deve ter origem comprovável na [`TRANSCRICAO.md`](file:///c:/Users/hahma/Documents/Projetos/FullCycle/FC3%20-%20Da%20Reunião%20ao%20Documento%20Design%20Docs%20Gerados%20por%20IA/fc3_design_docs/TRANSCRICAO.md) (com timestamp `[hh:mm] Nome`) ou no código-fonte da aplicação (com caminho real de arquivo). Não inventar requisitos inexistentes.
+> Qualquer requisito, decisão arquitetural, restrição, endpoint ou payload deve ter origem comprovável na [`TRANSCRICAO.md`](docs/F001/TRANSCRICAO.md) (com timestamp `[hh:mm] Nome`) ou no código-fonte da aplicação (com caminho real de arquivo). Não inventar requisitos inexistentes.
 
 > [!WARNING]
 > **Fronteira Rígida de Escopo (O que NÃO entra):**  
@@ -44,7 +44,7 @@ A estratégia é orientada a **Engenharia de Prompts Especializados**:
 ├── README.md                        # Relatório final da jornada com IA (substituirá o original)
 │
 ├── docs/
-│   ├── specialized_prompts/         # Prompts especializados para geração de cada artefato
+│   ├── design_docs_prompts/         # Prompts especializados para geração de cada artefato
 │   │   ├── prompt_prd.md            # Prompt para geração do PRD
 │   │   ├── prompt_adrs.md           # Prompt para geração das ADRs
 │   │   ├── prompt_rfc.md            # Prompt para geração da RFC
@@ -113,16 +113,16 @@ flowchart TD
 ---
 
 ### Fase 0: Mapeamento de Contexto e Extração Primária
-- [ ] Mapear entidades do `prisma/schema.prisma` (`Order`, `Customer`, `UserRole`, `OrderStatus`, etc.).
-- [ ] Mapear arquivos-chave em `src/` para integração futura:
+- [x] Mapear entidades do `prisma/schema.prisma` (`Order`, `Customer`, `UserRole`, `OrderStatus`, etc.). ✅
+- [x] Mapear arquivos-chave em `src/` para integração futura: ✅
   - `src/modules/orders/order.service.ts` (`changeStatus`, controle de transação `prisma.$transaction`).
   - `src/middlewares/auth.middleware.ts` e `requireRole`.
   - `src/middlewares/error.middleware.ts`.
   - `src/shared/errors/app-error.ts` e classes de erro de domínio.
   - `src/config/logger.ts` (Pino).
   - `src/server.ts` (modelo de inicialização para o futuro `src/worker.ts`).
-- [ ] Catalogar participantes da call: Larissa (Tech Lead), Marcos (PM), Bruno (Eng. Pedidos), Diego (Eng. Plataforma), Sofia (Segurança).
-- [ ] Catalogar decisões, números e prazos:
+- [x] Catalogar participantes da call: Larissa (Tech Lead), Marcos (PM), Bruno (Eng. Pedidos), Diego (Eng. Plataforma), Sofia (Segurança). ✅
+- [x] Catalogar decisões, números e prazos: ✅
   - Latência aceitável < 10s (polling worker a cada 2s).
   - Backoff: 5 tentativas (1m, 5m, 30m, 2h, 12h) -> DLQ em tabela separada.
   - Replay de DLQ: endpoint restrito a `ADMIN`.
@@ -132,11 +132,11 @@ flowchart TD
 
 ---
 
-### Fase 1: Criação dos Prompts Especializados (`docs/prompts/`)
+### Fase 1: Criação dos Prompts Especializados (`docs/design_docs_prompts/`)
 
 Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a geração dos documentos, em ordem natural e fluida:
 
-- [x] **1.1 Prompt de PRD (`docs/prompts/prompt_prd.md`)**
+- [x] **1.1 Prompt de PRD (`docs/design_docs_prompts/prompt_prd.md`)**
   - Papel: Definir requisitos de produto, problema, objetivos, métricas quantitativas, público e escopo.
   - Critérios embutidos no prompt:
     - Seguir padrão dos templates em `examples/PRD/`.
@@ -148,7 +148,7 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regras estritas de anti-alucinação e não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [x] **1.2 Prompt de ADRs (`docs/prompts/prompt_adrs.md`)**
+- [x] **1.2 Prompt de ADRs (`docs/design_docs_prompts/prompt_adrs.md`)**
   - Papel: Registrar decisões arquiteturais individuais e isoladas no formato MADR antes da proposta geral da RFC.
   - Critérios embutidos no prompt:
     - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{DIRETORIO_DESTINO}}`, `{{CONTEXTO_SISTEMA}}`).
@@ -159,7 +159,7 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Pelo menos 1 ADR referenciando diretamente arquivos/classes do código base.
   - Status: *Concluído* ✅
 
-- [x] **1.3 Prompt de RFC (`docs/prompts/prompt_rfc.md`)**
+- [x] **1.3 Prompt de RFC (`docs/design_docs_prompts/prompt_rfc.md`)**
   - Papel: Proposta arquitetural concisa (2 a 4 páginas) para discussão e revisão da equipe, integrando as decisões já registradas nas ADRs.
   - Critérios embutidos no prompt:
     - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{CAMINHO_DESTINO}}`, `{{DIRETORIO_ADRS}}`, `{{CONTEXTO_SISTEMA}}`).
@@ -172,7 +172,7 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regra estrita de não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [x] **1.4 Prompt de FDD (`docs/prompts/prompt_fdd.md`)**
+- [x] **1.4 Prompt de FDD (`docs/design_docs_prompts/prompt_fdd.md`)**
   - Papel: Especificação técnica profunda e acionável para o desenvolvedor codificar.
   - Critérios embutidos no prompt:
     - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{CAMINHO_DESTINO}}`, `{{ARQUIVO_PRD}}`, `{{DIRETORIO_ADRS}}`, `{{CONTEXTO_SISTEMA}}`).
@@ -185,7 +185,7 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
     - Regra estrita de não-ocultação de seções.
   - Status: *Concluído* ✅
 
-- [x] **1.5 Prompt do TRACKER (`docs/prompts/prompt_tracker.md`)**
+- [x] **1.5 Prompt do TRACKER (`docs/design_docs_prompts/prompt_tracker.md`)**
   - Papel: Matriz bidirecional de rastreabilidade para auditoria e controle de alucinações.
   - Critérios embutidos no prompt:
     - Agnóstico e reutilizável com parâmetros dinâmicos (`{{ARQUIVO_TRANSCRICAO}}`, `{{DIRETORIO_DOCUMENTOS}}`, `{{CAMINHO_DESTINO}}`, `{{CONTEXTO_SISTEMA}}`).
@@ -239,29 +239,29 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 ---
 
 ### Fase 4: Documentação do Processo e Preparação de Entrega
-- [ ] **Geração do `README.md` Raiz:**
-  - Substituir o README do boilerplate pelo relato detalhado da jornada de engenharia com IA.
-  - Descrição da dinâmica de maestro (definição, revisão crítica, iterações e refinamento).
-  - Ferramentas de IA utilizadas e papel de cada uma.
-  - Workflow adotado (cronologia de prompts e geração: PRD -> ADRs -> RFC -> FDD -> TRACKER).
-  - Blocos de código com pelo menos 2 prompts customizados reais.
-  - Pelo menos 2 iterações concretas relatando correções de alucinações ou aprofundamento técnico.
-  - Guia de navegação completo para os avaliadores.
-- [ ] **Checklist de Aceite Final:** Revisão de todos os 25 itens do checklist oficial de `REQUIREMENTS.md`.
+- [x] **Geração do `README.md` Raiz:**
+  - Substituir o README do boilerplate pelo relato detalhado da jornada de engenharia com IA. ✅
+  - Descrição da dinâmica de maestro (definição, revisão crítica, iterações e refinamento). ✅
+  - Ferramentas de IA utilizadas e papel de cada uma. ✅
+  - Workflow adotado (cronologia de prompts e geração: PRD -> ADRs -> RFC -> FDD -> TRACKER). ✅
+  - Blocos de código com pelo menos 2 prompts customizados reais. ✅
+  - Pelo menos 2 iterações concretas relatando correções de alucinações ou aprofundamento técnico. ✅
+  - Guia de navegação completo para os avaliadores. ✅
+- [x] **Checklist de Aceite Final:** Revisão de todos os 25 itens do checklist oficial de `REQUIREMENTS.md`. ✅
 
 ---
 
 ## 5. Matriz de Acompanhamento e Critérios de Aceite
 
-### 5.1 Prompts Especializados (`docs/specialized_prompts/`)
+### 5.1 Prompts Especializados (`docs/design_docs_prompts/`)
 
 | Prompt | Caminho | Características e Regras Embutidas | Status |
 | :--- | :--- | :--- | :--- |
-| **Prompt PRD** | `docs/specialized_prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
-| **Prompt ADRs** | `docs/specialized_prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
-| **Prompt RFC** | `docs/specialized_prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
-| **Prompt FDD** | `docs/specialized_prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
-| **Prompt TRACKER** | `docs/specialized_prompts/prompt_tracker.md` | Agnóstico e reutilizável; tabela 6 colunas; IDs padronizados; painel estatístico; cobertura ≥ 80% total, ≥ 70% transcrição, ≥ 5 linhas código. | ✅ Concluído |
+| **Prompt PRD** | `docs/design_docs_prompts/prompt_prd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 8+ RFs (`RF-00X`); RNFs (`RNF-00X`); tabela de insumos esperados e fallback sem ocultação de seções. | ✅ Concluído |
+| **Prompt ADRs** | `docs/design_docs_prompts/prompt_adrs.md` | Agnóstico e reutilizável; parâmetros dinâmicos; formato MADR; decisões autônomas; alternativas descartadas; trade-offs; referências ao código base. | ✅ Concluído |
+| **Prompt RFC** | `docs/design_docs_prompts/prompt_rfc.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 2 a 4 páginas; TL;DR; diagrama conceitual; alternativas descartadas; questões em aberto; links para ADRs existentes. | ✅ Concluído |
+| **Prompt FDD** | `docs/design_docs_prompts/prompt_fdd.md` | Agnóstico e reutilizável; parâmetros dinâmicos; 12 seções; 4+ contratos HTTP completos; matriz de erros prefixada; fluxos Mermaid; 4+ caminhos reais de código base. | ✅ Concluído |
+| **Prompt TRACKER** | `docs/design_docs_prompts/prompt_tracker.md` | Agnóstico e reutilizável; tabela 6 colunas; IDs padronizados; painel estatístico; cobertura ≥ 80% total, ≥ 70% transcrição, ≥ 5 linhas código. | ✅ Concluído |
 
 ### 5.2 Artefatos Gerados da Feature (`docs/F001/`)
 
@@ -272,7 +272,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 | **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ✅ Concluído |
 | **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ✅ Concluído |
 | **TRACKER** | `docs/F001/TRACKER.md` | Tabela com 6 colunas; ≥ 80% de cobertura de itens; ≥ 70% com `[hh:mm] Nome`; ≥ 5 com caminho real de código. | ✅ Concluído |
-| **README** | `README.md` | Jornada do processo; ferramentas de IA; workflow; ≥ 2 prompts em blocos de código; ≥ 2 iterações/correções documentadas; guia de navegação. | ⏳ Pendente |
+| **README** | `README.md` | Jornada do processo; ferramentas de IA; workflow; ≥ 2 prompts em blocos de código; ≥ 2 iterações/correções documentadas; guia de navegação. | ✅ Concluído |
 
 ---
 
