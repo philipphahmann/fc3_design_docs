@@ -2,7 +2,7 @@
 
 > **Projeto:** Full Cycle 3 — Da Reunião ao Documento: Design Docs Gerados por IA  
 > **Feature F001:** Sistema de Webhooks de Notificação de Pedidos (OMS)  
-> **Status Geral:** Em Planejamento / Especificação Inicial  
+> **Status Geral:** Em Execução — Fase 2 (Geração de Artefatos)  
 > **Última Atualização:** 2026-10-11  
 
 ---
@@ -201,10 +201,10 @@ Nesta fase focaremos na engenharia de cada prompt individual antes de rodar a ge
 
 Execução sequencial dos prompts gerados, garantindo que cada documento se apoie nos artefatos precedentes:
 
-- [ ] **2.1 Execução do Prompt PRD -> `docs/F001/PRD.md`**
+- [x] **2.1 Execução do Prompt PRD -> `docs/F001/PRD.md`**
   - Executar prompt usando `TRANSCRICAO.md` e referências de produto.
   - Revisar seções: problema, personas, métricas quantitativas, escopo (incluso/excluso), 8+ requisitos funcionais, riscos e estratégias de teste.
-  - Status: *Pendente*
+  - Status: *Concluído* ✅
 
 - [ ] **2.2 Execução do Prompt ADRs -> `docs/F001/adrs/ADR-001` a `ADR-00N.md`**
   - Executar prompt gerando entre 5 e 8 arquivos `.md` individuais.
@@ -266,7 +266,7 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 
 | Documento | Caminho | Regras Críticas Obrigatórias | Status |
 | :--- | :--- | :--- | :--- |
-| **PRD** | `docs/F001/PRD.md` | 12 seções; ≥ 8 Requisitos Funcionais; ≥ 1 meta quantitativa; ≥ 2 fora de escopo; ≥ 2 riscos com probabilidade/impacto. | ⏳ Pendente |
+| **PRD** | `docs/F001/PRD.md` | 12 seções; ≥ 8 Requisitos Funcionais; ≥ 1 meta quantitativa; ≥ 2 fora de escopo; ≥ 2 riscos com probabilidade/impacto. | ✅ Concluído |
 | **ADRs** | `docs/F001/adrs/ADR-*.md` | 5 a 8 arquivos MADR; cobrir ≥ 5 das 6 decisões nucleares da call; ≥ 1 ADR com referência explícita a arquivos/módulos existentes. | ⏳ Pendente |
 | **RFC** | `docs/F001/RFC.md` | 2 a 4 páginas; revisores reais da call; TL;DR; ≥ 2 alternativas descartadas com trade-offs; ≥ 2 questões em aberto; links para ≥ 2 ADRs existentes. | ⏳ Pendente |
 | **FDD** | `docs/F001/FDD.md` | Fluxos de outbox/worker/retry/DLQ; ≥ 4 contratos HTTP completos com payloads; matriz de erros prefixada `WEBHOOK_*`; ≥ 4 caminhos reais de código base; observabilidade. | ⏳ Pendente |
