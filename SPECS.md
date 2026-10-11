@@ -231,10 +231,10 @@ Execução sequencial dos prompts gerados, garantindo que cada documento se apoi
 ---
 
 ### Fase 3: Amarração Cruzada e Auditoria de Consistência
-- [ ] **Validação de Links Cruzados:** Garantir que links da RFC (`docs/F001/RFC.md`) para as ADRs (`adrs/ADR-*.md`) funcionem perfeitamente.
-- [ ] **Consistência Semântica:** Verificar se nomes de tabelas (`webhook_outbox`, `webhook_dead_letter`), payloads e nomes de headers (`X-Event-Id`, `X-Signature`, etc.) estão 100% alinhados entre PRD, ADRs, RFC e FDD.
-- [ ] **Auditoria de Anti-Alucinação:** Checar se nenhum arquivo inventado foi referenciado e se nenhum requisito descartado na call foi colocado como requisito da v1.
-- [ ] **Auditoria Numérica do Tracker:** Conferir proporções de linhas da transcrição e do código.
+- [x] **Validação de Links Cruzados:** Garantir que links da RFC (`docs/F001/RFC.md`) para as ADRs (`adrs/ADR-*.md`) funcionem perfeitamente. ✅
+- [x] **Consistência Semântica:** Verificar se nomes de tabelas (`webhook_outbox`, `webhook_dead_letter`), payloads e nomes de headers (`X-Event-Id`, `X-Signature`, etc.) estão 100% alinhados entre PRD, ADRs, RFC e FDD. ✅
+- [x] **Auditoria de Anti-Alucinação:** Checar se nenhum arquivo inventado foi referenciado e se nenhum requisito descartado na call foi colocado como requisito da v1. ✅
+- [x] **Auditoria Numérica do Tracker:** Conferir proporções de linhas da transcrição e do código. ✅
 
 ---
 
