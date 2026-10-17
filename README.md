@@ -195,10 +195,10 @@ Durante a condução do projeto com a IA, o papel de maestro exigiu intervençõ
 │           ├── ADR-001-outbox-no-mysql.md
 │           ├── ADR-002-politica-retry-backoff-dlq.md
 │           ├── ADR-003-autenticacao-hmac-sha256.md
-│           ├── ADR-004-entrega-at-least-once-com-x-event-id.md
+│           ├── ADR-004-entrega-at-least-once-idempotencia.md
 │           ├── ADR-005-worker-processo-separado-polling.md
-│           ├── ADR-006-reuso-padroes-existentes-oms.md
-│           └── ADR-007-snapshot-payload-na-insercao-outbox.md
+│           ├── ADR-006-reuso-padroes-codigo-existente.md
+│           └── ADR-007-snapshot-payload-insercao-outbox.md
 │
 ├── src/                                 # Código base do Order Management System (Intacto)
 ├── prisma/                              # Modelagem de dados Prisma ORM (Intacto)
@@ -274,6 +274,7 @@ Esta seção registra as revisões técnicas e refinamentos aplicados ao pacote 
 
 | Versão / Data | Componentes Afetados | Descrição da Atualização / Correção Aplicada | Motivação & Conformidade |
 | :---: | :--- | :--- | :--- |
+| **v1.1**<br/>*(2026-10-17)* | **README.md** (Seção 8.1) | **Sincronização Nominal das ADRs:** Ajuste dos nomes dos arquivos `ADR-004`, `ADR-006` e `ADR-007` na árvore estrutural para corresponderem exatamente aos arquivos no disco (`adrs/`). | Eliminação de discrepância textual na documentação de navegação. |
 | **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 9.2, 10.5)<br/>**TRACKER.md** (FDD-INT-05)<br/>**ADR-005, ADR-006**<br/>**README.md, SPECS.md** | **Correção de caminho do Logger:** Substituição universal de `src/config/logger.ts` pelo caminho real e canônico do repositório: `src/shared/logger/index.ts`. | Eliminação de alucinação de caminho de arquivo; garantia de que 100% das referências com `Fonte = CODIGO` no Tracker e nos docs existam no disco. |
 | **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 9.3) | **Inclusão de Tracing Distribuído:** Adição da especificação de correlação ponta a ponta (`X-Request-Id` na API ➔ `X-Event-Id` na outbox ➔ logs correlacionados no Worker), injeção de cabeçalhos padrão W3C Trace Context (`traceparent`, `tracestate`) nos POSTs externos e medição de spans do worker (`poll`, `sign`, `dispatch`). | Atendimento estrito ao critério de aceite da seção de Observabilidade (*"métricas, logs e tracing"*). |
 | **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 11) | **Inclusão da Seção "Dependências e Compatibilidade":** Formalização da matriz de runtime (Node.js >= 20 LTS, TypeScript 5.6), frameworks existentes (Express 4.21, Prisma 5.22, Zod 3.23, Pino 9.5, UUID 11.0, crypto nativo), compatibilidade com MySQL 8.0 e garantias retroativas. | Conformidade integral com a checklist de seções mínimas obrigatórias do FDD do desafio. |
