@@ -69,7 +69,7 @@ Durante a execução do projeto, o diretório de templates de prompt foi avaliad
 Para garantir um fluxo técnico natural sem antecipações artificiais, a produção seguiu rigorosamente a cronologia do SDD:
 
 1. **Contextualização e Leitura da Base:**
-   Inspeção detalhada de `src/modules/orders/order.service.ts`, `src/middlewares/`, `src/shared/errors/`, `src/config/logger.ts` e `prisma/schema.prisma` para mapear os pontos reais de extensão do sistema.
+   Inspeção detalhada de `src/modules/orders/order.service.ts`, `src/middlewares/`, `src/shared/errors/`, `src/shared/logger/index.ts` e `prisma/schema.prisma` para mapear os pontos reais de extensão do sistema.
 2. **Elaboração dos Prompts Mestres (`docs/design_docs_prompts/`):**
    Criação de prompts reutilizáveis com matrizes de insumos, regras de completude e instruções anti-alucinação.
 3. **ADRs Primeiro (`docs/F001/adrs/ADR-001` a `ADR-007.md`):**
@@ -158,7 +158,7 @@ Durante a condução do projeto com a IA, o papel de maestro exigiu intervençõ
 ### Iteração 3: Rastreabilidade Cirúrgica ao Código Existente
 - **Problema Detectado:** Na seção de integração do FDD e nas referências do Tracker, a IA fez alusões genéricas a arquivos fictícios, como `src/webhooks/webhook.service.ts` e classes abstratas que ainda não existiam no projeto.
 - **Intervenção do Maestro:** O edital exige rastreabilidade a arquivos reais existentes no repositório OMS como insumo soberano.
-- **Ação e Resultado:** Realizou-se uma varredura no código base e instruiu-se a IA a mapear os 7 arquivos concretos da aplicação (`src/modules/orders/order.service.ts`, `src/middlewares/auth.middleware.ts`, `src/middlewares/error.middleware.ts`, `src/shared/errors/app-error.ts`, `src/config/logger.ts`, `src/server.ts` e `prisma/schema.prisma`), detalhando como o novo módulo de webhooks se acopla a cada um (ex.: inserção transacional no método `changeStatus`, herança de `AppError` e proteção do endpoint de replay com `requireRole('ADMIN')`).
+- **Ação e Resultado:** Realizou-se uma varredura no código base e instruiu-se a IA a mapear os 7 arquivos concretos da aplicação (`src/modules/orders/order.service.ts`, `src/middlewares/auth.middleware.ts`, `src/middlewares/error.middleware.ts`, `src/shared/errors/app-error.ts`, `src/shared/logger/index.ts`, `src/routes/index.ts` / `src/server.ts` e `prisma/schema.prisma`), detalhando como o novo módulo de webhooks se acopla a cada um (ex.: inserção transacional no método `changeStatus`, herança de `AppError` e proteção do endpoint de replay com `requireRole('ADMIN')`).
 
 ### Iteração 4: Padronização Semântica de Diretórios e Nomenclatura
 - **Problema Detectado:** Dispersão inicial de diretórios com nomes longos (`docs/F001 - Sistema de Webhooks...`) e mistura de convenções de idioma na transcrição (`transcription.md`).
@@ -222,25 +222,25 @@ Durante a condução do projeto com a IA, o papel de maestro exigiu intervençõ
 - [x] **Arquivo existe e está em Markdown:** [`docs/F001/PRD.md`](docs/F001/PRD.md)
 - [x] **Contém todas as 12 seções obrigatórias especificadas** (Resumo, Problema, Público, Métricas, Escopo, RFs, RNFs, Trade-offs, Dependências, Riscos, Aceite e Testes)
 - [x] **Identifica no mínimo 8 requisitos funcionais:** Mapeados 9 requisitos funcionais (`RF-001` a `RF-009`)
-- [x] **Inclui pelo menos 1 objetivo com métrica quantitativa:** Meta de latência de entrega p95 < 10 segundos e disponibilidade ≥ 99,9%
-- [x] **Seção "Fora de escopo" lista itens descartados/adiados:** Listados 6 itens (RabbitMQ/Kafka na v1, múltiplos eventos além de status de pedidos, retries infinitos, interface web de gestão, filtros complexos e agregação em lote)
-- [x] **Seção "Riscos" inclui probabilidade, impacto e mitigação:** Mapeados 4 riscos técnicos e de negócio detalhados com probabilidade, impacto e ações preventivas/reativas
+- [x] **Inclui pelo menos 1 objetivo com métrica quantitativa:** Meta de latência p95 < 10 segundos e taxa de entrega com sucesso ≥ 99%
+- [x] **Seção "Fora de escopo" lista itens descartados/adiados:** Listados 6 itens (E-mails em falhas na v1, dashboard visual, rate limiting imediato, mensageria pesada externa, ordenação global multi-worker e webhooks de entrada)
+- [x] **Seção "Riscos" inclui probabilidade, impacto e mitigação:** Mapeados 3 riscos com P/I/M detalhados e planos de contingência
 
 ### RFC (`docs/F001/RFC.md`)
 - [x] **Arquivo existe e está em Markdown:** [`docs/F001/RFC.md`](docs/F001/RFC.md)
 - [x] **Contém todas as seções obrigatórias e extensão concisa (2 a 4 páginas)**
-- [x] **Metadados completos com revisores reais da reunião:** Diego (Tech Lead), Larissa (Backend), Bruno (Backend), Sofia (Segurança) e Marcos (PM)
-- [x] **Seção "Alternativas consideradas" com trade-offs:** 3 alternativas detalhadas (Mensageria externa com RabbitMQ/Kafka, CDC via Debezium e Disparo síncrono inline na requisição HTTP)
-- [x] **Seção "Questões em aberto":** 3 questões documentadas (Janela de retenção do histórico, política de rate limiting por parceiro e chave pública assimétrica)
+- [x] **Metadados completos com revisores reais da reunião:** Larissa (Tech Lead), Marcos (PM), Bruno (Engenheiro Pleno - Pedidos), Diego (Engenheiro Sênior - Plataforma) e Sofia (Engenheira de Segurança)
+- [x] **Seção "Alternativas consideradas" com trade-offs:** 3 alternativas detalhadas (Mensageria externa pesada com Kafka/Redis Streams, Disparo HTTP síncrono no fluxo de pedidos e Garantia distribuída bilateral estrita Exactly-Once)
+- [x] **Seção "Questões em aberto":** 3 questões documentadas (Rate limiting de saída por parceiro, Alertas por e-mail em falhas consecutivas e Escala horizontal multi-worker com ordenação)
 - [x] **Referencia com links diretos pelo menos 2 ADRs:** Linkadas todas as 7 ADRs do projeto (`ADR-001` a `ADR-007`)
 
 ### FDD (`docs/F001/FDD.md`)
 - [x] **Arquivo existe e está em Markdown:** [`docs/F001/FDD.md`](docs/F001/FDD.md)
-- [x] **Contém todas as 12 seções obrigatórias e fluxos detalhados** (Outbox, Worker, Retry e DLQ com diagramas Mermaid)
+- [x] **Contém todas as seções obrigatórias e fluxos detalhados** (Outbox, Worker, Retry e DLQ com diagramas Mermaid, além da seção de Dependências e Compatibilidade)
 - [x] **Seção "Contratos públicos" com pelo menos 4 endpoints HTTP completos:** Documentados 8 contratos completos com headers, schemas JSON e status codes
-- [x] **Matriz de erros padronizada com o prefixo `WEBHOOK_*`:** Matriz com 10 erros estritamente prefixados (`WEBHOOK_PAYLOAD_TOO_LARGE`, `WEBHOOK_SIGNATURE_INVALID`, etc.)
-- [x] **Seção obrigatória "Integração com o sistema existente":** Detalha integração com 7 arquivos reais do código (`order.service.ts`, `auth.middleware.ts`, `error.middleware.ts`, `app-error.ts`, `logger.ts`, `server.ts`, `schema.prisma`)
-- [x] **Seção "Observabilidade" cita métricas, logs e tracing:** Métricas Prometheus, logs estruturados Pino em formato JSON e correlação de spans distribuídos via `X-Event-Id`
+- [x] **Matriz de erros padronizada com o prefixo `WEBHOOK_*`:** Matriz com 10 erros estritamente prefixados (`WEBHOOK_NOT_FOUND`, `WEBHOOK_INVALID_URL`, `WEBHOOK_TIMEOUT`, etc.)
+- [x] **Seção obrigatória "Integração com o sistema existente":** Detalha integração com arquivos reais do código (`src/modules/orders/order.service.ts`, `src/middlewares/auth.middleware.ts`, `src/middlewares/error.middleware.ts`, `src/shared/errors/app-error.ts`, `src/shared/logger/index.ts`, `src/routes/index.ts`, `src/server.ts`, `prisma/schema.prisma`)
+- [x] **Seção "Observabilidade" cita métricas, logs e tracing:** Métricas operacionais, logs estruturados Pino em formato JSON e Tracing Distribuído via correlação de `X-Request-Id` / `X-Event-Id` e W3C Trace Context (`traceparent`)
 
 ### ADRs (`docs/F001/adrs/ADR-NNN-*.md`)
 - [x] **Pasta contém entre 5 e 8 arquivos no formato `ADR-NNN-*.md`:** 7 arquivos criados no padrão MADR (`ADR-001` a `ADR-007`)
@@ -252,10 +252,11 @@ Durante a condução do projeto com a IA, o papel de maestro exigiu intervençõ
 - [x] **Arquivo existe e segue a tabela de 6 colunas obrigatória:** [`docs/F001/TRACKER.md`](docs/F001/TRACKER.md)
 - [x] **Pelo menos 80% dos itens identificáveis estão mapeados:** 57 itens mapeados cobrindo 100% das seções de PRD, ADRs, RFC e FDD
 - [x] **Pelo menos 70% das linhas têm `Fonte = TRANSCRICAO` com `[hh:mm] Nome`:** 50 de 57 linhas (**87,7%**) possuem timestamp e interlocutor válidos
-- [x] **Pelo menos 5 linhas têm `Fonte = CODIGO` com caminho real:** 7 linhas (**12,3%**) apontam para arquivos reais existentes
+- [x] **Pelo menos 5 linhas têm `Fonte = CODIGO` com caminho real:** 7 linhas (**12,3%**) apontam exclusivamente para arquivos reais existentes no repositório
+- [x] **Zero caminhos inexistentes:** Todos os caminhos foram auditados no disco e validados
 
 ### README (`README.md`)
-- [x] **Contém todas as seções obrigatórias especificadas** (Sobre o desafio, Ferramentas, Workflow, Prompts, Iterações, Navegação e Critérios)
+- [x] **Contém todas as seções obrigatórias especificadas** (Sobre o desafio, Ferramentas, Workflow, Prompts, Iterações, Navegação, Critérios e Histórico de Atualizações)
 - [x] **Lista ferramentas de IA utilizadas e papel de cada uma**
 - [x] **Apresenta pelo menos 2 prompts customizados em blocos de código**
 - [x] **Descreve pelo menos 2 iterações ou correções concretas feitas pelo maestro**
@@ -264,3 +265,19 @@ Durante a condução do projeto com a IA, o papel de maestro exigiu intervençõ
 - [x] **Nenhum requisito contradiz a transcrição ou o código existente:** Validado e auditado
 - [x] **Nenhum arquivo de código mencionado nos documentos é inexistente no repositório:** 100% dos caminhos verificados e existentes no sistema
 - [x] **Código base preservado intacto:** Nenhuma alteração realizada em `src/`, `prisma/` ou `tests/`
+
+---
+
+## 10. Histórico de Atualizações
+
+Esta seção registra as revisões técnicas e refinamentos aplicados ao pacote de Design Docs após processo de auditoria de conformidade:
+
+| Versão / Data | Componentes Afetados | Descrição da Atualização / Correção Aplicada | Motivação & Conformidade |
+| :---: | :--- | :--- | :--- |
+| **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 9.2, 10.5)<br/>**TRACKER.md** (FDD-INT-05)<br/>**ADR-005, ADR-006**<br/>**README.md, SPECS.md** | **Correção de caminho do Logger:** Substituição universal de `src/config/logger.ts` pelo caminho real e canônico do repositório: `src/shared/logger/index.ts`. | Eliminação de alucinação de caminho de arquivo; garantia de que 100% das referências com `Fonte = CODIGO` no Tracker e nos docs existam no disco. |
+| **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 9.3) | **Inclusão de Tracing Distribuído:** Adição da especificação de correlação ponta a ponta (`X-Request-Id` na API ➔ `X-Event-Id` na outbox ➔ logs correlacionados no Worker), injeção de cabeçalhos padrão W3C Trace Context (`traceparent`, `tracestate`) nos POSTs externos e medição de spans do worker (`poll`, `sign`, `dispatch`). | Atendimento estrito ao critério de aceite da seção de Observabilidade (*"métricas, logs e tracing"*). |
+| **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 11) | **Inclusão da Seção "Dependências e Compatibilidade":** Formalização da matriz de runtime (Node.js >= 20 LTS, TypeScript 5.6), frameworks existentes (Express 4.21, Prisma 5.22, Zod 3.23, Pino 9.5, UUID 11.0, crypto nativo), compatibilidade com MySQL 8.0 e garantias retroativas. | Conformidade integral com a checklist de seções mínimas obrigatórias do FDD do desafio. |
+| **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 10.6)<br/>**TRACKER.md** (FDD-INT-06) | **Precisão Arquitetural de Rotas:** Documentação precisa do fluxo de injeção de rotas em `src/routes/index.ts` e `src/app.ts` sob o prefixo `/api/v1`, mantendo `src/server.ts` estritamente com a responsabilidade de bootstrap do processo. | Alinhamento rigoroso com a arquitetura real do Express na codebase existente. |
+| **v1.1**<br/>*(2026-10-17)* | **FDD.md** (Seção 5.3)<br/>**ADR-002, PRD, RFC** | **Harmonização do Fluxo de Retentativas:** Sincronização exata da esteira de 5 retentativas com backoff exponencial (1m, 5m, 30m, 2h, 12h) para garantir que todas as janelas sejam executadas antes do descarte definitivo para a tabela `webhook_dead_letter`. | Eliminação de ambiguidade na contagem de tentativas entre os fluxogramas e as matrizes de resiliência. |
+| **v1.1**<br/>*(2026-10-17)* | **README.md** (Seção 9) | **Alinhamento de Metadados e Revisores:** Correção dos papéis de Larissa (Tech Lead) e Diego (Engenheiro Sênior de Plataforma), além de sincronização de todo o checklist final com o conteúdo real dos documentos. | Fidelidade absoluta à transcrição oficial da reunião e integridade da documentação. |
+| **v1.0**<br/>*(2026-10-11)* | Todos os artefatos | Publicação inicial da suíte de Design Docs (PRD, RFC, FDD, ADR-001 a ADR-007 e TRACKER). | Entrega preliminar da Feature F001. |

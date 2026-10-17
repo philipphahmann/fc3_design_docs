@@ -248,5 +248,5 @@ ARQUIVO_TRANSCRICAO: "TRANSCRICAO.md"
 CAMINHO_DESTINO: "docs/F001/FDD.md"
 ARQUIVO_PRD: "docs/F001/PRD.md"
 DIRETORIO_ADRS: "docs/F001/adrs"
-CONTEXTO_SISTEMA: "Código Node.js/TypeScript em src/ (ex: src/modules/orders/order.service.ts, src/middlewares/error.middleware.ts, src/shared/errors/app-error.ts, src/config/logger.ts, src/server.ts) e prisma/schema.prisma"
+CONTEXTO_SISTEMA: "Código Node.js/TypeScript em src/ (ex: src/modules/orders/order.service.ts, src/middlewares/error.middleware.ts, src/shared/errors/app-error.ts, src/shared/logger/index.ts, src/server.ts) e prisma/schema.prisma"
 ```

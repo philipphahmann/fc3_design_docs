@@ -153,5 +153,5 @@ Para aplicar este prompt nos artefatos do projeto atual:
 ARQUIVO_TRANSCRICAO: "TRANSCRICAO.md"
 DIRETORIO_DOCUMENTOS: "docs/F001"
 CAMINHO_DESTINO: "docs/F001/TRACKER.md"
-CONTEXTO_SISTEMA: "src/ (src/modules/orders/order.service.ts, src/middlewares/auth.middleware.ts, src/middlewares/error.middleware.ts, src/shared/errors/app-error.ts, src/config/logger.ts, src/server.ts) e prisma/schema.prisma"
+CONTEXTO_SISTEMA: "src/ (src/modules/orders/order.service.ts, src/middlewares/auth.middleware.ts, src/middlewares/error.middleware.ts, src/shared/errors/app-error.ts, src/shared/logger/index.ts, src/server.ts) e prisma/schema.prisma"
 ```

@@ -294,13 +294,13 @@ sequenceDiagram
     Note over Worker: Falha detectada na entrega do evento
     Worker->>Worker: Incrementa attemptCount = attemptCount + 1
     
-    alt attemptCount < 5 (Retentativa válida)
+    alt attemptCount <= 5 (Retentativas 1 a 5 com backoff progressivo)
         Worker->>Worker: Calcula intervalo: [1m, 5m, 30m, 2h, 12h][attemptCount - 1]
         Worker->>Worker: nextRetryAt = NOW() + intervalo
         Worker->>DB: UPDATE webhook_outbox SET status = 'PENDING', attempt_count = attemptCount, next_retry_at = nextRetryAt, last_error = errorMsg
         Worker->>DB: INSERT INTO webhook_deliveries (success = false, statusCode, errorMessage)
-    else attemptCount >= 5 (Exaustão definitiva de tentativas)
-        Worker->>DB: INSERT INTO webhook_dead_letter (originalEventId, webhookId, orderId, payload, totalAttempts = 5, errorMessage)
+    else attemptCount > 5 (Exaustão definitiva após 5 retentativas)
+        Worker->>DB: INSERT INTO webhook_dead_letter (originalEventId, webhookId, orderId, payload, totalAttempts = attemptCount, errorMessage)
         Worker->>DB: DELETE FROM webhook_outbox WHERE id = evento.id
         Worker->>DB: INSERT INTO webhook_deliveries (success = false, errorMessage = "MAX_RETRIES_EXCEEDED -> MOVED_TO_DLQ")
         Note over Worker,DLQ: Evento isolado permanentemente na DLQ
@@ -647,7 +647,7 @@ O módulo expõe métricas para monitoramento corporativo:
 - `webhook_dead_letter_total`: Contador cumulativo de eventos transferidos para a DLQ.
 
 ### 9.2 Logs Estruturados em JSON (Pino Logger)
-Todos os logs utilizam a instância compartilhada `src/config/logger.ts`, gerando saídas estruturadas em JSON:
+Todos os logs utilizam a instância compartilhada `src/shared/logger/index.ts`, gerando saídas estruturadas em JSON:
 
 ```json
 {
@@ -684,6 +684,27 @@ Em cenários de falha ou timeout:
 }
 ```
 
+### 9.3 Rastreamento Distribuído e Correlação (Tracing)
+Para assegurar observabilidade de ponta a ponta sem introduzir overhead de instrumentação pesada, o sistema implementa **Tracing Distribuído baseado em Context Propagation e Correlação de Identificadores**:
+
+1. **Correlação entre Mutação Síncrona (API), Outbox e Worker Assíncrono:**
+   - O middleware `src/middlewares/request-logger.middleware.ts` já gera e anexa o cabeçalho `X-Request-Id` (UUID v4) a cada requisição HTTP que chega à API.
+   - Ao executar a transação em `OrderService.changeStatus`, a função `publishWebhookEvent(tx, ...)` gera o `eventId` (UUID v4 imutável) e registra a correlação da requisição original.
+   - Quando o worker autônomo (`src/worker.ts`) processa o lote da outbox, cada emissão de log estruturado no Pino vincula os atributos `{ requestId, event_id, webhook_id, order_id }`, viabilizando rastrear em ferramentas de agregação de logs (Kibana, Grafana Loki, Datadog) o fluxo completo desde o `PATCH /orders/:id/status` inicial até a confirmação de entrega ao receptor do parceiro.
+
+2. **Propagação de Contexto W3C Trace Context (`traceparent` e `tracestate`):**
+   - Nos disparos HTTP POST efetuados pelo worker para os servidores dos parceiros, além de `X-Event-Id`, o cliente HTTP injeta os cabeçalhos padrão da especificação W3C Trace Context:
+     - `traceparent: 00-{trace_id}-{span_id}-01` (onde `trace_id` deriva deterministicamente do identificador global do evento, mantendo a linhagem do trace).
+     - `tracestate: oms=origin:order.status_changed,env:production`
+   - Essa propagação viabiliza que sistemas integradores de grande porte (Atlas, MaxDistribuição) correlacionem suas próprias spans internas de processamento de webhook com a raiz de disparo no OMS via OpenTelemetry / Jaeger.
+
+3. **Spans Lógicos e Latência no Worker:**
+   Durante a execução de cada entrega, o worker mensura e registra as durações dos três spans lógicos do ciclo:
+   - `span: webhook.poll` — Tempo de consulta e seleção de eventos no MySQL;
+   - `span: webhook.sign` — Tempo de serialização JSON e cômputo da assinatura HMAC-SHA256;
+   - `span: webhook.dispatch` — Tempo de trânsito de rede do envio HTTP POST (submetido ao timeout rígido de 10 segundos).
+
+
 ---
 
 ## 10. Integração com o Sistema Existente
@@ -712,19 +733,21 @@ Esta seção detalha o acoplamento da nova feature com **arquivos reais existent
 - **Ponto de Integração:** O arquivo `src/modules/webhooks/webhook.errors.ts` importará `AppError` e exportará as classes especializadas do domínio (`WebhookNotFoundError`, `WebhookInvalidUrlError`, `WebhookSecretRotationExpiredError`, `WebhookTimeoutError`, `WebhookDlqNotFoundError`).
 - **Impacto Técnico:** Preserva a arquitetura limpa e a uniformidade de tratamento de erros em toda a aplicação.
 
-### 10.5 `src/config/logger.ts`
-- **Papel Atual:** Exporta a instância corporativa do logger Pino configurada com serialização em JSON.
-- **Ponto de Integração:** O processador do worker (`src/worker.ts` e `src/modules/webhooks/webhook.worker.ts`) consumirá a instância `logger`, enriquecendo os metadados com chaves `event_id`, `webhook_id`, `attempt`, `status_code` e `duration_ms`.
+### 10.5 `src/shared/logger/index.ts`
+- **Papel Atual:** Exporta a instância corporativa singleton do logger Pino configurada com serialização em JSON, timestamps em padrão ISO e mascaramento/redação de dados sensíveis (`redactPaths`).
+- **Ponto de Integração:** O processador do worker (`src/worker.ts` e `src/modules/webhooks/webhook.worker.ts`) e os controllers/services de webhooks consumirão diretamente a instância `logger` exportada por este módulo, enriquecendo os metadados com chaves estruturadas `event_id`, `webhook_id`, `attempt`, `status_code` e `duration_ms`.
 - **Impacto Técnico:** Telemetria estruturada enviada imediatamente aos agregadores de logs sem criar bibliotecas redundantes.
 
-### 10.6 `src/server.ts`
-- **Papel Atual:** Ponto de entrada HTTP do OMS, configurando middlewares globais e montando roteadores sob `/orders`, `/auth`, etc.
-- **Ponto de Integração:** Importação e registro dos roteadores de webhooks:
-  ```typescript
-  app.use('/webhooks', webhookRoutes);
-  app.use('/admin/webhooks', adminWebhookRoutes);
-  ```
-- **Impacto Técnico:** Expõe os novos endpoints REST de autoatendimento e administração sem alterar as rotas existentes.
+### 10.6 `src/routes/index.ts` e `src/app.ts` (Bootstrap via `src/server.ts`)
+- **Papel Atual:** `src/app.ts` instancia o Express, aplica middlewares globais e monta as rotas da aplicação sob o prefixo `/api/v1` através de `buildApiRouter(controllers)`. O arquivo `src/routes/index.ts` agrega os roteadores modulares (`/auth`, `/users`, `/customers`, `/products`, `/orders`). A inicialização do processo HTTP ocorre em `src/server.ts`.
+- **Ponto de Integração:** 
+  1. Criação e injeção do `WebhookController` na função `buildControllers` em `src/app.ts`.
+  2. Registro das novas rotas de webhooks na função `buildApiRouter` em `src/routes/index.ts`:
+     ```typescript
+     router.use('/webhooks', buildWebhookRouter(controllers.webhook));
+     router.use('/admin/webhooks', buildAdminWebhookRouter(controllers.adminWebhook));
+     ```
+- **Impacto Técnico:** Expõe os novos endpoints REST de autoatendimento e administração devidamente prefixados sob `/api/v1/webhooks` e `/api/v1/admin/webhooks` sem alterar as rotas existentes.
 
 ### 10.7 `prisma/schema.prisma`
 - **Papel Atual:** Define os modelos relacionais (`User`, `Customer`, `Order`, `OrderItem`, `Product`, `OrderStatusHistory`) para MySQL.
@@ -733,7 +756,34 @@ Esta seção detalha o acoplamento da nova feature com **arquivos reais existent
 
 ---
 
-## 11. Riscos de Engenharia e Mitigação
+## 11. Dependências e Compatibilidade
+
+### 11.1 Matriz de Runtime e Linguagem
+- **Node.js (Runtime):** `>= 20.17.0 LTS`. Suporte pleno a ES Modules nativos (`"type": "module"` em `package.json`), fetch nativo, `process.hrtime.bigint()` para medição precisa de latência em nanossegundos e módulo nativo `node:crypto`.
+- **TypeScript:** `5.6.3`. Compilação estrita com target ES2022, resolução de módulos `NodeNext`, `strict: true`, `noImplicitAny: true` e `strictNullChecks: true`.
+
+### 11.2 Bibliotecas do Projeto e Frameworks (Stack Existente)
+O módulo de webhooks adere 100% às bibliotecas e versões já consolidadas na aplicação base, sem adição de pacotes pesados ou brokers externos:
+- **Express (`4.21.1`):** Framework web HTTP minimalista utilizado para o roteamento e middlewares.
+- **Prisma Client (`5.22.0`):** ORM relacional tipado para modelagem de banco, migrações e suporte a transações interativas (`prisma.$transaction`).
+- **Zod (`3.23.8`):** Validação estrita de schemas de entrada (URLs HTTPS, arrays de eventos e parâmetros de consulta).
+- **Pino (`9.5.0`) & Pino-HTTP (`10.3.0`):** Engine de logging assíncrono de alta performance com formatação estruturada em JSON.
+- **UUID (`11.0.3`):** Geração determinística de identificadores UUID v4 imutáveis para idempotência (`X-Event-Id`).
+- **node:crypto (Built-in Node.js):** Geração de segredos criptográficos de alta entropia (`crypto.randomBytes(32).toString('hex')`) e cômputo determinístico de assinaturas HMAC (`crypto.createHmac('sha256', secret)`).
+
+### 11.3 Compatibilidade com o Banco de Dados
+- **MySQL 8.0+:** Total compatibilidade com o container Docker oficial do projeto (`docker-compose.yml`), suportando:
+  - Colunas nativas do tipo `Json` para os campos `payload` (snapshot na outbox e dead letter) e `events` (lista de inscrições);
+  - Índices compostos B-Tree de alta seletividade para queries de polling em tempo real (`idx_webhook_outbox_polling`);
+  - Semântica de transações ACID com nível de isolamento padrão `REPEATABLE READ`.
+
+### 11.4 Compatibilidade Retroativa (Backwards Compatibility)
+- **Zero Impacto em Contratos Existentes:** As adições de schema (`WebhookEndpoint`, `WebhookOutbox`, `WebhookDeadLetter`, `WebhookDelivery`) são estritamente aditivas e não alteram nenhuma coluna das tabelas existentes (`orders`, `customers`, `users`, `products`).
+- **Desacoplamento de Clientes Antigos:** Clientes B2B que ainda não utilizam webhooks continuam podendo consumir `GET /orders` sem qualquer alteração de contrato ou comportamento.
+
+---
+
+## 12. Riscos de Engenharia e Mitigação
 
 | Risco Técnico | Probabilidade | Impacto | Mitigação de Engenharia | Plano de Contingência |
 | :--- | :---: | :---: | :--- | :--- |
@@ -745,9 +795,9 @@ Esta seção detalha o acoplamento da nova feature com **arquivos reais existent
 
 ---
 
-## 12. Critérios de Aceite Técnicos e Testes
+## 13. Critérios de Aceite Técnicos e Testes
 
-### 12.1 Checklist de Critérios de Aceite Técnicos
+### 13.1 Checklist de Critérios de Aceite Técnicos
 - [ ] O modelo relacional no Prisma comita 100% das migrações sem quebrar as tabelas existentes (`orders`, `customers`).
 - [ ] O método `OrderService.changeStatus` grava o evento na outbox de forma atômica; qualquer falha na outbox cancela a alteração de status do pedido.
 - [ ] Pedidos cujo status não conste nos eventos inscritos do cliente não geram registros na tabela outbox.
@@ -761,7 +811,7 @@ Esta seção detalha o acoplamento da nova feature com **arquivos reais existent
 - [ ] A rotação de chave secreta viabiliza período de convivência de 24 horas mantendo a chave antiga em `previousSecret`.
 - [ ] A latência p95 entre o commit do pedido e o envio do pacote HTTP é inferior a 10 segundos.
 
-### 12.2 Estratégia de Testes Automatizados
+### 13.2 Estratégia de Testes Automatizados
 - **Testes Unitários:**
   - Validação de schemas Zod (rejeição de URLs `http://`, arrays de eventos vazios ou tipos inválidos).
   - Cálculo determinístico de hash HMAC-SHA256 contra vetores de teste conhecidos.

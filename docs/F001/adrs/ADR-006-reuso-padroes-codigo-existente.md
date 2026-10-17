@@ -10,7 +10,7 @@ A estrutura atual conta com:
 - **Organização Modular por Domínio:** Diretório `src/modules/<dominio>/` (ex.: `src/modules/orders`, `src/modules/auth`), contendo controller, service, repository, routes e schemas Zod.
 - **Tratamento Centralizado de Erros:** Classe base abstrata `AppError` em `src/shared/errors/app-error.ts` e classes especializadas (`NotFoundError`, `ConflictError`, `ValidationError`, `ForbiddenError`), com códigos de erro em caixa alta.
 - **Middleware de Erros Unificado:** `src/middlewares/error.middleware.ts`, que captura instâncias de `AppError`, erros de validação Zod e falhas do Prisma ORM, normalizando as respostas HTTP em JSON estruturado com status code adequado.
-- **Observabilidade Estruturada:** Biblioteca **Pino** configurada em `src/config/logger.ts`, gerando logs em formato JSON.
+- **Observabilidade Estruturada:** Biblioteca **Pino** configurada em `src/shared/logger/index.ts`, gerando logs em formato JSON.
 - **Segurança e Controle de Acesso (RBAC):** Middleware `authenticate` e função utilitária `requireRole` em `src/middlewares/auth.middleware.ts`.
 - **Acesso a Dados:** Prisma ORM com tipagem estrita gerada a partir de `prisma/schema.prisma`.
 
@@ -42,7 +42,7 @@ Reutilizar integralmente os padrões arquiteturais e bibliotecas existentes na b
    - Reuso imediato de `src/middlewares/error.middleware.ts` sem alteração no interceptor global.
 
 3. **Telemetria com Pino Logger:**
-   - Uso exclusivo da instância de `logger` de `src/config/logger.ts` para registrar logs estruturados em JSON no worker e na API, enriquecidos com os atributos `event_id`, `webhook_id`, `status_code`, `attempt` e `duration_ms`.
+   - Uso exclusivo da instância de `logger` de `src/shared/logger/index.ts` para registrar logs estruturados em JSON no worker e na API, enriquecidos com os atributos `event_id`, `webhook_id`, `status_code`, `attempt` e `duration_ms`.
 
 4. **Controle de Acesso RBAC:**
    - Aplicação do middleware `authenticate` em todas as rotas de webhooks e `requireRole('ADMIN')` especificamente na rota de replay de DLQ (`POST /admin/webhooks/dead-letter/:id/replay`).
@@ -80,7 +80,7 @@ Reutilizar integralmente os padrões arquiteturais e bibliotecas existentes na b
   - `src/middlewares/auth.middleware.ts`: Reuso de `authenticate` e `requireRole('ADMIN')`.
   - `src/middlewares/error.middleware.ts`: Interceptação automática de `AppError` e exceções Zod.
   - `src/shared/errors/app-error.ts`: Classe base herdada pelas exceções do domínio de webhooks.
-  - `src/config/logger.ts`: Logger corporativo Pino instanciado e reutilizado sem modificações.
-  - `src/server.ts`: Registro do roteador `webhookRoutes` no pipeline do Express.
+  - `src/shared/logger/index.ts`: Logger corporativo Pino instanciado e reutilizado sem modificações.
+  - `src/server.ts` / `src/app.ts` / `src/routes/index.ts`: Registro e inicialização dos roteadores de webhooks sob `/api/v1` no pipeline Express.
   - `prisma/schema.prisma`: Extensão dos modelos relacionais.
 - **Rastreabilidade na Transcrição:** Deliberado e formalizado por Bruno, Diego, Sofia e Larissa em `[09:27] Bruno`, `[09:28] Bruno e Diego`, `[09:29] Bruno e Diego`, `[09:30] Bruno e Larissa`, `[09:35] Sofia e Larissa` e `[09:48] Larissa`.

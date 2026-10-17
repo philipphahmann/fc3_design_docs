@@ -119,7 +119,7 @@ flowchart TD
   - `src/middlewares/auth.middleware.ts` e `requireRole`.
   - `src/middlewares/error.middleware.ts`.
   - `src/shared/errors/app-error.ts` e classes de erro de domínio.
-  - `src/config/logger.ts` (Pino).
+  - `src/shared/logger/index.ts` (Pino).
   - `src/server.ts` (modelo de inicialização para o futuro `src/worker.ts`).
 - [x] Catalogar participantes da call: Larissa (Tech Lead), Marcos (PM), Bruno (Eng. Pedidos), Diego (Eng. Plataforma), Sofia (Segurança). ✅
 - [x] Catalogar decisões, números e prazos: ✅

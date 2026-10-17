@@ -52,6 +52,6 @@ Implementar o despachante de webhooks como um **processo Node.js autônomo e des
 - **Limitação de Concorrência Inicial:** A premissa de worker único limita o throughput máximo a cenários onde a vazão sequencial atende o volume de pedidos, exigindo particionamento distribuído quando a empresa atingir patamares muito superiores de transações por segundo.
 
 ## Integração com o Código Base / Rastreabilidade
-- **Padrão de Entrada:** Espelha a convenção arquitetural de inicialização já existente em `src/server.ts`, instanciando variáveis de ambiente de `src/config/env.ts` e logger de `src/config/logger.ts`.
+- **Padrão de Entrada:** Espelha a convenção arquitetural de inicialização já existente em `src/server.ts`, instanciando variáveis de ambiente de `src/config/env.ts` e logger de `src/shared/logger/index.ts`.
 - **Instância Prisma:** O arquivo `src/worker.ts` importará e gerenciará um novo `PrismaClient` com encerramento gracioso via sinais `SIGTERM` e `SIGINT`.
 - **Rastreabilidade na Transcrição:** Deliberado e formalizado por Diego, Bruno e Larissa em `[09:09] Bruno e Diego`, `[09:10] Marcos e Larissa`, `[09:11] Diego, Larissa e Bruno`, `[09:12] Larissa e Diego`, `[09:13] Diego e Larissa`, `[09:28] Bruno e Diego` e `[09:29] Diego e Bruno`.

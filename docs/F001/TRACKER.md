@@ -12,7 +12,7 @@
 Este documento estabelece o mapeamento bidirecional e a matriz de auditoria de todo o pacote de **Design Docs** da Feature F001 (*Sistema de Webhooks de Notificação de Pedidos*). 
 
 A finalidade primordial desta auditoria é assegurar que **100% das especificações técnicas registradas nos documentos** (PRD, ADRs, RFC e FDD) possuam evidência primária comprovável em uma das duas fontes soberanas:
-1. **`TRANSCRICAO`:** A gravação da reunião de alinhamento técnico transcrita em [`docs/F001/TRANSCRICAO.md`](docs/F001/TRANSCRICAO.md), identificada estritamente pelo padrão temporal e falante `[hh:mm] Nome`.
+1. **`TRANSCRICAO`:** A gravação da reunião de alinhamento técnico transcrita em [`TRANSCRICAO.md`](TRANSCRICAO.md), identificada estritamente pelo padrão temporal e falante `[hh:mm] Nome`.
 2. **`CODIGO`:** Os arquivos reais existentes no repositório do Order Management System (Node.js/TypeScript/Prisma).
 
 ---
@@ -75,8 +75,8 @@ A finalidade primordial desta auditoria é assegurar que **100% das especificaç
 | **FDD-INT-02** | `docs/F001/FDD.md` | Integração de Código | Proteção de rota com `requireRole('ADMIN')` e `authenticate` | CODIGO | `src/middlewares/auth.middleware.ts` |
 | **FDD-INT-03** | `docs/F001/FDD.md` | Integração de Código | Captura centralizada automática de exceções de domínio `AppError` | CODIGO | `src/middlewares/error.middleware.ts` |
 | **FDD-INT-04** | `docs/F001/FDD.md` | Integração de Código | Extensão da classe base corporativa `AppError` para prefixo `WEBHOOK_*` | CODIGO | `src/shared/errors/app-error.ts` |
-| **FDD-INT-05** | `docs/F001/FDD.md` | Integração de Código | Emissão de telemetria estruturada em JSON no Worker e na API | CODIGO | `src/config/logger.ts` |
-| **FDD-INT-06** | `docs/F001/FDD.md` | Integração de Código | Registro dos roteadores `/webhooks` e `/admin/webhooks` no Express | CODIGO | `src/server.ts` |
+| **FDD-INT-05** | `docs/F001/FDD.md` | Integração de Código | Emissão de telemetria estruturada em JSON no Worker e na API | CODIGO | `src/shared/logger/index.ts` |
+| **FDD-INT-06** | `docs/F001/FDD.md` | Integração de Código | Registro dos roteadores `/webhooks` e `/admin/webhooks` no Express | CODIGO | `src/routes/index.ts` |
 | **FDD-INT-07** | `docs/F001/FDD.md` | Integração de Código | Modelagem relacional das novas tabelas (`outbox`, `dlq`, `deliveries`) | CODIGO | `prisma/schema.prisma` |
 
 ---
